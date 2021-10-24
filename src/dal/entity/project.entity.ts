@@ -1,7 +1,9 @@
-import { Field } from '@nestjs/graphql';
-import { Column, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Field, ObjectType } from '@nestjs/graphql';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Task } from './task.entity';
 
+@ObjectType()
+@Entity()
 export class Project {
   @Field()
   @PrimaryGeneratedColumn()

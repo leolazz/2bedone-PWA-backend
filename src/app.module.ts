@@ -4,16 +4,17 @@ import { AppService } from './app.service';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
-import { TaskModule } from './tasks/task.module';
-import { TaskService } from './tasks/task.service';
+import { TaskModule } from './task/task.module';
 
 @Module({
   imports: [
     TaskModule,
     TypeOrmModule.forRoot({
       type: 'sqlite',
-      database: 'db',
-      entities: [__dirname + '/dal/entity/**/*.entity.ts'],
+      database: 'data/sqlite3.db',
+      // whats up with this
+      entities: [__dirname + '/dal/entity/**/*.*.*'],
+      //entities: [__dirname + '/entity/**/*.entity.ts'],
       synchronize: true,
     }),
     GraphQLModule.forRoot({
@@ -21,6 +22,6 @@ import { TaskService } from './tasks/task.service';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService, TaskService],
+  providers: [AppService],
 })
 export class AppModule {}

@@ -2,6 +2,16 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Project {
+  id: Float!
+  tasks: [Project!]
+  title: String
+  details: String
+  createdDate: String
+  endDate: String
+  isCompleted: Boolean
+}
+
 type Query {
   hello: String!
 }

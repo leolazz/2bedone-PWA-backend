@@ -23,7 +23,7 @@ export class Task {
 
   @Field({ nullable: true })
   @Column()
-  public outcomes: string[];
+  public outcomes: string;
 
   @Field({ nullable: true })
   @Column()
