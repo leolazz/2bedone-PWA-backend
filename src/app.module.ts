@@ -5,16 +5,16 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
 import { TaskModule } from './task/task.module';
+import { ProjectModule } from './project/project.module';
 
 @Module({
   imports: [
     TaskModule,
+    ProjectModule,
     TypeOrmModule.forRoot({
       type: 'sqlite',
       database: 'data/sqlite3.db',
-      // whats up with this
       entities: [__dirname + '/dal/entity/**/*.*.*'],
-      //entities: [__dirname + '/entity/**/*.entity.ts'],
       synchronize: true,
     }),
     GraphQLModule.forRoot({

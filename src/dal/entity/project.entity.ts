@@ -1,24 +1,24 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Task } from './task.entity';
 
 @ObjectType()
 @Entity()
 export class Project {
-  @Field()
+  @Field((type) => ID)
   @PrimaryGeneratedColumn()
   public id: number;
 
-  @Field((type) => [Project], { nullable: true })
-  @OneToMany(() => Task, (task) => task.project)
-  public tasks: Task[];
+  @Field((type) => [Task], { nullable: true })
+  @OneToMany(() => Task, (task) => task.project, { nullable: true })
+  public tasks?: Promise<Task[]>;
 
   @Field({ nullable: true })
   @Column()
   public title: string;
 
   @Field({ nullable: true })
-  @Column()
+  @Column({ nullable: true })
   public details: string;
 
   @Field({ nullable: true })

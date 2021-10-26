@@ -5,25 +5,28 @@ import { Project } from './project.entity';
 @ObjectType()
 @Entity()
 export class Task {
-  @Field((type) => Int)
+  @Field((type) => ID)
   @PrimaryGeneratedColumn()
   public id: number;
 
   @Field((type) => Project, { nullable: true })
-  @ManyToOne(() => Project, (project) => project.tasks)
-  public project: Project;
+  @ManyToOne(() => Project, (project) => project.tasks, { nullable: true })
+  public project?: Promise<Project>;
+
+  @Column({ nullable: true })
+  public projectId?: number;
 
   @Field({ nullable: true })
   @Column()
   public title: string;
 
   @Field({ nullable: true })
-  @Column()
-  public details: string;
+  @Column({ nullable: true })
+  public details?: string;
 
   @Field({ nullable: true })
-  @Column()
-  public outcomes: string;
+  @Column({ nullable: true })
+  public outcomes?: string;
 
   @Field({ nullable: true })
   @Column()
