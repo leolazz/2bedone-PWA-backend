@@ -14,6 +14,14 @@ export class ProjectService {
     private readonly taskRepository: Repository<Task>,
   ) {}
 
+  async findAll(): Promise<Project[]> {
+    return await this.projectRepository.find();
+  }
+
+  async findOneById(projectId: number): Promise<Project> {
+    return await this.projectRepository.findOne(projectId);
+  }
+
   async createProject(createProjectDto: CreateProjectDto): Promise<Project> {
     let newProject = await this.projectRepository.save({
       ...createProjectDto,
@@ -22,11 +30,10 @@ export class ProjectService {
     let newTasks = await this.taskRepository.save(
       createProjectDto.tasks.map((x) => ({
         ...x,
-        // TODO: Add projectId field to task entity
         projectId: newProject.id,
       })),
     );
-
+    newProject.tasks = newTasks;
     return newProject;
   }
 }

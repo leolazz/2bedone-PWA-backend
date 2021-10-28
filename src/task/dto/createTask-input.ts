@@ -1,11 +1,10 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
 import { Project } from '../../dal/entity/project.entity';
-import { CreateProjectDto } from '../../project/dto/createProjectDto';
 
 @InputType()
-export class CreateTaskDto {
-  @Field((type) => CreateProjectDto, { nullable: true })
-  public project?: Project;
+export class CreateTaskInput {
+  // Project field removed to avoid missfilling data in the api
+  // This class serves to be used when creating a task from the task resolver, createtaskdto is used for the project resolver
 
   @Field((type) => Int, { nullable: true })
   public projectId?: number;

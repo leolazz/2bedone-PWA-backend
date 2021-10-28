@@ -10,9 +10,13 @@ export class Task {
   public id: number;
 
   @Field((type) => Project, { nullable: true })
-  @ManyToOne(() => Project, (project) => project.tasks, { nullable: true })
+  @ManyToOne(() => Project, (project) => project.tasks, {
+    nullable: true,
+    cascade: true,
+  })
   public project?: Promise<Project>;
 
+  @Field((type) => Int, { nullable: true })
   @Column({ nullable: true })
   public projectId?: number;
 

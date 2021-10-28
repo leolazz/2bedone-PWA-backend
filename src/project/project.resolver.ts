@@ -1,5 +1,6 @@
 import {
   Args,
+  ID,
   Int,
   Mutation,
   Parent,
@@ -12,9 +13,20 @@ import { Task } from '../dal/entity/task.entity';
 import { CreateProjectDto } from './dto/createProjectDto';
 import { ProjectService } from './project.service';
 
-@Resolver()
+@Resolver((of) => Project)
 export class ProjectResolver {
   constructor(private projectService: ProjectService) {}
+
+  @Query(() => [Project])
+  async allProjects(): Promise<Project[]> {
+    return this.projectService.findAll();
+  }
+  @Query(() => Project)
+  async findOneProjectById(
+    @Args({ name: 'id', type: () => ID }) id: number,
+  ): Promise<Project> {
+    return this.projectService.findOneById(id);
+  }
 
   @Mutation((returns) => Project)
   createProject(

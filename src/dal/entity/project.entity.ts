@@ -10,7 +10,9 @@ export class Project {
   public id: number;
 
   @Field((type) => [Task], { nullable: true })
-  @OneToMany(() => Task, (task) => task.project, { nullable: true })
+  @OneToMany(() => Task, (task) => task.project, {
+    nullable: true,
+  })
   public tasks?: Promise<Task[]>;
 
   @Field({ nullable: true })
