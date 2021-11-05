@@ -19,6 +19,10 @@ import { ProjectModule } from './project/project.module';
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      cors: {
+        credentials: true,
+        origin: true,
+      },
     }),
   ],
   controllers: [AppController],

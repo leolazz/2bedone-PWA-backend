@@ -17,9 +17,16 @@ export class ProjectService {
   async findAll(): Promise<Project[]> {
     return await this.projectRepository.find();
   }
+  async findAllWithLimit(limit: number): Promise<Project[]> {
+    return await this.projectRepository.find({ take: limit });
+  }
 
   async findOneById(projectId: number): Promise<Project> {
     return await this.projectRepository.findOne(projectId);
+  }
+
+  async getTasks(projectId: number): Promise<Task[]> {
+    return this.taskRepository.find({ where: { projectId: projectId } });
   }
 
   async createProject(createProjectDto: CreateProjectDto): Promise<Project> {

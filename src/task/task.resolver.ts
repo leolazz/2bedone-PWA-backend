@@ -19,7 +19,19 @@ export class TaskResolver {
 
   @Query(() => [Task])
   async allTasks() {
-    return await this.taskService.findAll();
+    return this.taskService.findAll();
+  }
+
+  @Query(() => [Task])
+  async allTasksLimit(
+    @Args({ name: 'limit', type: () => Int }) limit: number,
+  ): Promise<Task[]> {
+    return this.taskService.findAllWithLimit(limit);
+  }
+
+  @Query(() => [Task])
+  async allOrphanTasks(): Promise<Task[]> {
+    return this.taskService.findAllOprhanedTasks();
   }
 
   // This seems weird. without the if statement a project is always returned even if there is no supplied projectId

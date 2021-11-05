@@ -27,6 +27,16 @@ export class TaskService {
     return await this.projectRepository.findOne(projectId);
   }
 
+  async findAllWithLimit(limit: number): Promise<Task[]> {
+    return await this.taskRepository.find({ take: limit });
+  }
+
+  async findAllOprhanedTasks() {
+    return this.taskRepository.find({
+      where: { project: null, projectId: null },
+    });
+  }
+
   async findAll(): Promise<Task[]> {
     return await this.taskRepository.find();
   }

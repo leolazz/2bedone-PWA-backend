@@ -22,10 +22,13 @@ type Project {
   createdDate: String
   endDate: String
   isCompleted: Boolean
+  project: Task!
 }
 
 type Query {
   allTasks: [Task!]!
+  allTasksLimit(limit: Int!): [Task!]!
+  allOrphanTasks: [Task!]!
   allProjects: [Project!]!
   findOneProjectById(id: ID!): Project!
 }
