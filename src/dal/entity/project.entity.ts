@@ -17,7 +17,7 @@ export class Project {
   })
   public tasks?: Promise<Task[]>;
 
-  @Field({ nullable: true })
+  @Field({ nullable: false })
   @Column()
   public title: string;
 
@@ -25,15 +25,15 @@ export class Project {
   @Column({ nullable: true })
   public details: string;
 
-  @Field({ nullable: true })
+  @Field({ nullable: false })
   @Column()
   public createdDate: string;
 
-  @Field({ nullable: true })
+  @Field({ nullable: false })
   @Column()
   public endDate: string;
 
-  @Field({ nullable: true })
+  @Field({ nullable: false })
   @Column()
   public isCompleted: boolean;
 }

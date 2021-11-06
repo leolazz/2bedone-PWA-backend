@@ -3,7 +3,7 @@
 # ------------------------------------------------------
 
 type Task {
-  id: ID!
+  id: Int!
   project: Project
   projectId: Int
   title: String
@@ -16,12 +16,12 @@ type Task {
 
 type Project {
   id: ID!
-  title: String
+  title: String!
   details: String
-  createdDate: String
-  endDate: String
-  isCompleted: Boolean
-  tasks: [Task!]
+  createdDate: String!
+  endDate: String!
+  isCompleted: Boolean!
+  tasks: [Task]
 }
 
 type Query {
@@ -48,10 +48,10 @@ input CreateTaskInput {
 }
 
 input CreateProjectDto {
-  tasksId: [Int!]
-  title: String
+  tasksId: [Int]
+  title: String!
   details: String
-  createdDate: String
-  endDate: String
-  isCompleted: Boolean
+  createdDate: String!
+  endDate: String!
+  isCompleted: Boolean!
 }

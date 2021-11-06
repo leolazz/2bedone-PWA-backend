@@ -5,7 +5,7 @@ import { Project } from './project.entity';
 @ObjectType()
 @Entity()
 export class Task {
-  @Field((type) => ID)
+  @Field((type) => Int)
   @PrimaryGeneratedColumn()
   public id: number;
 

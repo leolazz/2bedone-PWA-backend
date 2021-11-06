@@ -7,21 +7,21 @@ export class CreateProjectDto {
   // @Field((type) => [CreateTaskDto], { nullable: true })
   // public tasks?: Task[];
 
-  @Field((type) => [Int], { nullable: true })
-  public tasksId: number[];
+  @Field((type) => [Int], { nullable: 'itemsAndList' })
+  public tasksId?: number[];
 
-  @Field({ nullable: true })
+  @Field({ nullable: false })
   public title: string;
 
   @Field({ nullable: true })
   public details: string;
 
-  @Field({ nullable: true })
+  @Field({ nullable: false })
   public createdDate: string;
 
-  @Field({ nullable: true })
+  @Field({ nullable: false })
   public endDate: string;
 
-  @Field({ nullable: true })
+  @Field({ nullable: false })
   public isCompleted: boolean;
 }
