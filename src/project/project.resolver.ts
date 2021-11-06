@@ -34,8 +34,8 @@ export class ProjectResolver {
   ): Promise<Project> {
     return this.projectService.createProject(createProjectDto);
   }
-  @ResolveField((returns) => Task)
-  project(@Parent() project: Project): Promise<Task[]> {
+  @ResolveField((returns) => [Task], { nullable: true })
+  tasks(@Parent() project: Project): Promise<Task[]> {
     if (project.tasks) {
       return this.projectService.getTasks(project.id);
     } else return null;

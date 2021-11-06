@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { create } from 'domain';
+import { In, Repository } from 'typeorm';
 import { Project } from '../dal/entity/project.entity';
 import { Task } from '../dal/entity/task.entity';
+import { TaskService } from '../task/task.service';
 import { CreateProjectDto } from './dto/createProjectDto';
 
 @Injectable()
@@ -30,16 +32,17 @@ export class ProjectService {
   }
 
   async createProject(createProjectDto: CreateProjectDto): Promise<Project> {
-    let newProject = await this.projectRepository.save({
-      ...createProjectDto,
-      tasks: null,
+    let newProject = await this.projectRepository.save({ ...createProjectDto });
+    let tasks = await this.taskRepository.find({
+      where: { id: In(createProjectDto.tasksId) },
     });
-    let newTasks = await this.taskRepository.save(
-      createProjectDto.tasks.map((x) => ({
-        ...x,
-        projectId: newProject.id,
-      })),
-    );
+    tasks.forEach((task) => (task.projectId = newProject.id));
+    /**
+     *  type is set to any to allow awaiting the save.
+     *  Otherwise it does not return before the method
+     */
+    let newTasks: any = await this.taskRepository.save(tasks);
+
     newProject.tasks = newTasks;
     return newProject;
   }

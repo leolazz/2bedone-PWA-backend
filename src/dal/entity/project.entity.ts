@@ -9,7 +9,9 @@ export class Project {
   @PrimaryGeneratedColumn()
   public id: number;
 
-  @Field((type) => [Task], { nullable: true })
+  /**
+   * handled with field resolver
+   */
   @OneToMany(() => Task, (task) => task.project, {
     nullable: true,
   })
