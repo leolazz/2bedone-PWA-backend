@@ -15,7 +15,7 @@ type Task {
 }
 
 type Project {
-  id: ID!
+  id: Int!
   title: String!
   details: String
   createdDate: String!
