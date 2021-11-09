@@ -22,6 +22,9 @@ export class TaskService {
     });
     return newTask;
   }
+  async findOneById(id: number) {
+    return await this.taskRepository.findOne(id);
+  }
 
   async getProject(projectId: number): Promise<Project> {
     return await this.projectRepository.findOne(projectId);

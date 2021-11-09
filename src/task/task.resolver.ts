@@ -33,6 +33,12 @@ export class TaskResolver {
   async allOrphanTasks(): Promise<Task[]> {
     return this.taskService.findAllOprhanedTasks();
   }
+  @Query(() => Task)
+  async findOneTaskById(
+    @Args({ name: 'id', type: () => Int }) id: number,
+  ): Promise<Task> {
+    return this.taskService.findOneById(id);
+  }
 
   // This seems weird. without the if statement a project is always returned even if there is no supplied projectId
   @ResolveField((returns) => Project)
