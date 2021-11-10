@@ -15,6 +15,14 @@ export class TaskService {
     private readonly projectRepository: Repository<Project>,
   ) {}
 
+  async getTasks(limit?: number, offset?: number): Promise<Task[]> {
+    return await this.taskRepository.find({
+      where: {},
+      take: limit,
+      skip: offset,
+    });
+  }
+
   async createTask(createTaskDto: CreateTaskDto): Promise<Task> {
     const newTask = this.taskRepository.save({
       ...createTaskDto,

@@ -28,6 +28,13 @@ export class TaskResolver {
   ): Promise<Task[]> {
     return this.taskService.findAllWithLimit(limit);
   }
+  @Query(() => [Task])
+  async getTasks(
+    @Args({ name: 'limit', type: () => Int, nullable: true }) limit: number,
+    @Args({ name: 'offset', type: () => Int, nullable: true }) offset: number,
+  ): Promise<Task[]> {
+    return this.taskService.getTasks(limit, offset);
+  }
 
   @Query(() => [Task])
   async allOrphanTasks(): Promise<Task[]> {

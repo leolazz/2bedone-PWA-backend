@@ -27,6 +27,7 @@ type Project {
 type Query {
   allTasks: [Task!]!
   allTasksLimit(limit: Int!): [Task!]!
+  getTasks(offset: Int, limit: Int): [Task!]!
   allOrphanTasks: [Task!]!
   findOneTaskById(id: Int!): Task!
   allProjects: [Project!]!
