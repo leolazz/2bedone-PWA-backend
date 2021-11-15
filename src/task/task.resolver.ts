@@ -7,9 +7,12 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
+import { PaginatedTasksResponse } from '../dal/entity/pagination/paginatedResponse.helper';
+import { PageableOptionsTasks } from '../dal/entity/pagination/sortOptionsInput.helper';
 import { Project } from '../dal/entity/project.entity';
 import { Task } from '../dal/entity/task.entity';
 import { CreateTaskInput } from './dto/createTask-input';
+import { CreateTaskDto } from './dto/createTaskDto';
 
 import { TaskService } from './task.service';
 
@@ -28,12 +31,18 @@ export class TaskResolver {
   ): Promise<Task[]> {
     return this.taskService.findAllWithLimit(limit);
   }
-  @Query(() => [Task])
-  async getTasks(
-    @Args({ name: 'limit', type: () => Int, nullable: true }) limit: number,
-    @Args({ name: 'offset', type: () => Int, nullable: true }) offset: number,
-  ): Promise<Task[]> {
-    return this.taskService.getTasks(limit, offset);
+  @Query(() => PaginatedTasksResponse)
+  async paginatedTasks(
+    @Args('pageableOptions', { nullable: true })
+    PageableOptionsTasks?: PageableOptionsTasks,
+  ): Promise<PaginatedTasksResponse> {
+    const [items, total] = await this.taskService.getTasks(
+      PageableOptionsTasks,
+    );
+    return {
+      items,
+      total,
+    };
   }
 
   @Query(() => [Task])
@@ -53,6 +62,13 @@ export class TaskResolver {
     if (task.projectId) {
       return this.taskService.getProject(task.projectId);
     } else return null;
+  }
+
+  @Mutation((returns) => Task)
+  updateTask(
+    @Args('createTaskDto') createTaskDto: CreateTaskDto,
+  ): Promise<Task> {
+    return this.taskService.updateTask(createTaskDto);
   }
 
   @Mutation((returns) => Task)

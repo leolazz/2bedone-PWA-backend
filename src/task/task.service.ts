@@ -2,6 +2,8 @@ import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { create } from 'domain';
 import { Repository } from 'typeorm';
+import { generateTypeOrmOrderOptions } from '../dal/entity/pagination/paginatedResponse.helper';
+import { PageableOptionsTasks } from '../dal/entity/pagination/sortOptionsInput.helper';
 import { Project } from '../dal/entity/project.entity';
 import { Task } from '../dal/entity/task.entity';
 import { CreateTaskDto } from './dto/createTaskDto';
@@ -15,11 +17,21 @@ export class TaskService {
     private readonly projectRepository: Repository<Project>,
   ) {}
 
-  async getTasks(limit?: number, offset?: number): Promise<Task[]> {
-    return await this.taskRepository.find({
+  // async getTasks(limit?: number, offset?: number): Promise<Task[]> {
+  //   return await this.taskRepository.find({
+  //     where: {},
+  //     take: limit,
+  //     skip: offset,
+  //   });
+  // }
+  async getTasks(
+    pageableOptions?: PageableOptionsTasks,
+  ): Promise<[Task[], number]> {
+    return await this.taskRepository.findAndCount({
       where: {},
-      take: limit,
-      skip: offset,
+      take: pageableOptions?.limit,
+      skip: pageableOptions?.offset,
+      order: generateTypeOrmOrderOptions(pageableOptions?.sortOptions),
     });
   }
 
@@ -36,6 +48,9 @@ export class TaskService {
 
   async getProject(projectId: number): Promise<Project> {
     return await this.projectRepository.findOne(projectId);
+  }
+  async updateTask(task: CreateTaskDto) {
+    return this.taskRepository.save({ ...task, project: null });
   }
 
   async findAllWithLimit(limit: number): Promise<Task[]> {

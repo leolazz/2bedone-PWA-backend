@@ -24,22 +24,51 @@ type Project {
   tasks: [Task]
 }
 
+type PaginatedTasksResponse {
+  items: [Task!]!
+  total: Int!
+}
+
 type Query {
   allTasks: [Task!]!
   allTasksLimit(limit: Int!): [Task!]!
-  getTasks(offset: Int, limit: Int): [Task!]!
+  paginatedTasks(pageableOptions: PageableOptionsTasks): PaginatedTasksResponse!
   allOrphanTasks: [Task!]!
   findOneTaskById(id: Int!): Task!
   allProjects: [Project!]!
   findOneProjectById(id: ID!): Project!
 }
 
+input PageableOptionsTasks {
+  limit: Int
+  offset: Int
+  sortOptions: SortOptionsTasksInput
+}
+
+input SortOptionsTasksInput {
+  field: Fields!
+  ascending: Boolean!
+}
+
+"""fields to sort by"""
+enum Fields {
+  ID
+  TITLE
+  PROJECTID
+  CREATEDDATE
+  ENDDATE
+  ISCOMPLETED
+}
+
 type Mutation {
+  updateTask(createTaskDto: CreateTaskDto!): Task!
   createTask(createTaskDto: CreateTaskInput!): Task!
   createProject(createProjectDto: CreateProjectDto!): Project!
 }
 
-input CreateTaskInput {
+input CreateTaskDto {
+  id: Int
+  project: CreateProjectDto
   projectId: Int
   title: String!
   details: String
@@ -53,6 +82,16 @@ input CreateProjectDto {
   tasksId: [Int]
   title: String!
   details: String
+  createdDate: String!
+  endDate: String!
+  isCompleted: Boolean!
+}
+
+input CreateTaskInput {
+  projectId: Int
+  title: String!
+  details: String
+  outcomes: String
   createdDate: String!
   endDate: String!
   isCompleted: Boolean!

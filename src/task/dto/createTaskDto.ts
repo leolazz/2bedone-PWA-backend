@@ -4,6 +4,9 @@ import { CreateProjectDto } from '../../project/dto/createProjectDto';
 
 @InputType()
 export class CreateTaskDto {
+  @Field((type) => Int, { nullable: true })
+  public id?: number;
+
   @Field((type) => CreateProjectDto, { nullable: true })
   public project?: Project;
 
