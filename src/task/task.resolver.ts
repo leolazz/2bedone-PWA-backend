@@ -7,8 +7,10 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
-import { PaginatedTasksResponse } from '../dal/entity/pagination/paginatedResponse.helper';
-import { PageableOptionsTasks } from '../dal/entity/pagination/sortOptionsInput.helper';
+import {
+  PageableOptions,
+  PaginatedTasksResponse,
+} from '../dal/entity/pagination/paginatedResponse.helper';
 import { Project } from '../dal/entity/project.entity';
 import { Task } from '../dal/entity/task.entity';
 import { CreateTaskInput } from './dto/createTask-input';
@@ -34,11 +36,9 @@ export class TaskResolver {
   @Query(() => PaginatedTasksResponse)
   async paginatedTasks(
     @Args('pageableOptions', { nullable: true })
-    PageableOptionsTasks?: PageableOptionsTasks,
+    PageableOptions?: PageableOptions,
   ): Promise<PaginatedTasksResponse> {
-    const [items, total] = await this.taskService.getTasks(
-      PageableOptionsTasks,
-    );
+    const [items, total] = await this.taskService.getTasks(PageableOptions);
     return {
       items,
       total,

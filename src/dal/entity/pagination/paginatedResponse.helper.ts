@@ -1,4 +1,5 @@
 import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
+import { Project } from '../project.entity';
 import { Task } from '../task.entity';
 
 export interface ClassType<T = any> {
@@ -22,7 +23,8 @@ export default function PaginatedResponse<TItem>(TItemClass: ClassType<TItem>) {
 
 @ObjectType()
 export class PaginatedTasksResponse extends PaginatedResponse(Task) {}
-
+@ObjectType()
+export class PaginatedProjectsResponse extends PaginatedResponse(Project) {}
 @InputType()
 export class SortOptions {
   @Field()
@@ -39,6 +41,9 @@ export class PageableOptions {
 
   @Field(() => Int, { nullable: true })
   public offset?: number;
+
+  @Field(() => Boolean, { nullable: true })
+  public isCompleted?: boolean;
 
   @Field({ nullable: true })
   public sortOptions?: SortOptions;

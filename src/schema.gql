@@ -29,35 +29,32 @@ type PaginatedTasksResponse {
   total: Int!
 }
 
+type PaginatedProjectsResponse {
+  items: [Project!]!
+  total: Int!
+}
+
 type Query {
   allTasks: [Task!]!
   allTasksLimit(limit: Int!): [Task!]!
-  paginatedTasks(pageableOptions: PageableOptionsTasks): PaginatedTasksResponse!
+  paginatedTasks(pageableOptions: PageableOptions): PaginatedTasksResponse!
   allOrphanTasks: [Task!]!
   findOneTaskById(id: Int!): Task!
-  allProjects: [Project!]!
-  findOneProjectById(id: ID!): Project!
+  allProjects(isCompleted: Boolean!): [Project!]!
+  findOneProjectById(id: Int!): Project!
+  paginatedProjects(pageableOptions: PageableOptions): PaginatedProjectsResponse!
 }
 
-input PageableOptionsTasks {
+input PageableOptions {
   limit: Int
   offset: Int
-  sortOptions: SortOptionsTasksInput
+  isCompleted: Boolean
+  sortOptions: SortOptions
 }
 
-input SortOptionsTasksInput {
-  field: Fields!
+input SortOptions {
+  field: String!
   ascending: Boolean!
-}
-
-"""fields to sort by"""
-enum Fields {
-  ID
-  TITLE
-  PROJECTID
-  CREATEDDATE
-  ENDDATE
-  ISCOMPLETED
 }
 
 type Mutation {
