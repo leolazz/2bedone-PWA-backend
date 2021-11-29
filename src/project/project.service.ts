@@ -22,6 +22,12 @@ export class ProjectService {
     private readonly taskService: TaskService,
   ) {}
 
+  async deleteProject(id: number) {
+    const project = await this.projectRepository.findOne(id);
+    const deletedProject = await this.projectRepository.remove(project);
+    return deletedProject;
+  }
+
   async findAll(isCompleted: boolean): Promise<Project[]> {
     return await this.projectRepository.find({
       where: { isCompleted: isCompleted },

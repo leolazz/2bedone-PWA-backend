@@ -59,8 +59,10 @@ input SortOptions {
 
 type Mutation {
   updateTask(createTaskDto: CreateTaskDto!): Task!
+  deleteTask(id: Float!): Task!
   createTask(createTaskDto: CreateTaskInput!): Task!
   updateProject(updateProjectDto: UpdateProjectDto!): Project!
+  deleteProject(id: Float!): Project!
   createProject(createProjectDto: CreateProjectDto!): Project!
 }
 

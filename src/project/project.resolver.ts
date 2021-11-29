@@ -54,6 +54,10 @@ export class ProjectResolver {
   ): Promise<Project> {
     return this.projectService.updateProject(updateProjectDto);
   }
+  @Mutation((returns) => Project)
+  deleteProject(@Args('id') id: number): Promise<Project> {
+    return this.projectService.deleteProject(id);
+  }
 
   @Mutation((returns) => Project)
   createProject(

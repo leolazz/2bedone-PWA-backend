@@ -72,6 +72,11 @@ export class TaskResolver {
   }
 
   @Mutation((returns) => Task)
+  deleteTask(@Args('id') id: number): Promise<Task> {
+    return this.taskService.deleteTask(id);
+  }
+
+  @Mutation((returns) => Task)
   createTask(
     @Args('createTaskDto') createTaskDto: CreateTaskInput,
   ): Promise<Task> {

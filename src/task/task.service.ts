@@ -18,6 +18,12 @@ export class TaskService {
     private readonly projectRepository: Repository<Project>,
   ) {}
 
+  async deleteTask(id: number) {
+    const task = await this.taskRepository.findOne(id);
+    const deletedTask = await this.taskRepository.remove(task);
+    return deletedTask;
+  }
+
   async getTasks(pageableOptions?: PageableOptions): Promise<[Task[], number]> {
     return await this.taskRepository.findAndCount({
       where: { isCompleted: pageableOptions.isCompleted },
