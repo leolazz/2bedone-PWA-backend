@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { In, Repository, UpdateResult } from 'typeorm';
 import { Project } from '../dal/entity/project.entity';
 import { Task } from '../dal/entity/task.entity';
 import { CreateProjectDto } from './dto/createProjectDto';
@@ -8,6 +8,9 @@ import {
   generateTypeOrmOrderOptions,
   PageableOptions,
 } from '../dal/entity/pagination/paginatedResponse.helper';
+import { timeStamp } from 'console';
+import { UpdateProjectDto } from './dto/updateProjectDto';
+import { TaskService } from '../task/task.service';
 
 @Injectable()
 export class ProjectService {
@@ -16,6 +19,7 @@ export class ProjectService {
     private readonly projectRepository: Repository<Project>,
     @InjectRepository(Task)
     private readonly taskRepository: Repository<Task>,
+    private readonly taskService: TaskService,
   ) {}
 
   async findAll(isCompleted: boolean): Promise<Project[]> {
@@ -45,9 +49,22 @@ export class ProjectService {
       order: generateTypeOrmOrderOptions(pageableOptions?.sortOptions),
     });
   }
+  async updateProject(project: UpdateProjectDto): Promise<Project> {
+    const updatedProject = await this.projectRepository.save(project);
+    if (project.removeExistingTasks)
+      await this.taskService.removeProject(project.id);
+
+    let tasks = await this.taskRepository.find({
+      where: { id: In(project.tasksId) },
+    });
+    tasks.forEach((task) => (task.projectId = updatedProject.id));
+    let updatedTasks: any = await this.taskRepository.save(tasks);
+    updatedProject.tasks = updatedTasks;
+    return updatedProject;
+  }
 
   async createProject(createProjectDto: CreateProjectDto): Promise<Project> {
-    let newProject = await this.projectRepository.save({ ...createProjectDto });
+    let newProject = await this.projectRepository.save(createProjectDto);
     let tasks = await this.taskRepository.find({
       where: { id: In(createProjectDto.tasksId) },
     });

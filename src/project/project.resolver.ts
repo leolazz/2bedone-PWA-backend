@@ -15,6 +15,7 @@ import {
 import { Project } from '../dal/entity/project.entity';
 import { Task } from '../dal/entity/task.entity';
 import { CreateProjectDto } from './dto/createProjectDto';
+import { UpdateProjectDto } from './dto/updateProjectDto';
 import { ProjectService } from './project.service';
 
 @Resolver((of) => Project)
@@ -45,6 +46,13 @@ export class ProjectResolver {
       items,
       total,
     };
+  }
+
+  @Mutation((returns) => Project)
+  updateProject(
+    @Args('updateProjectDto') updateProjectDto: UpdateProjectDto,
+  ): Promise<Project> {
+    return this.projectService.updateProject(updateProjectDto);
   }
 
   @Mutation((returns) => Project)

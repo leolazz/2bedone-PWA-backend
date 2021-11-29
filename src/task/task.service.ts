@@ -45,6 +45,12 @@ export class TaskService {
     return this.taskRepository.save({ ...task, project: null });
   }
 
+  async removeProject(projectId: number) {
+    const tasks = await this.taskRepository.find({ where: { projectId } });
+    tasks.forEach((x) => (x.projectId = null));
+    await this.taskRepository.save(tasks);
+  }
+
   async findAllWithLimit(limit: number): Promise<Task[]> {
     return await this.taskRepository.find({ take: limit });
   }

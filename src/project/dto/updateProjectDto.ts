@@ -1,7 +1,13 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
 
 @InputType()
-export class CreateProjectDto {
+export class UpdateProjectDto {
+  @Field((type) => Int)
+  public id?: number;
+
+  @Field()
+  removeExistingTasks: boolean;
+
   @Field((type) => [Int], { nullable: 'itemsAndList' })
   public tasksId?: number[];
 

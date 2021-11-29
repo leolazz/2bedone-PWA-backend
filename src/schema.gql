@@ -60,6 +60,7 @@ input SortOptions {
 type Mutation {
   updateTask(createTaskDto: CreateTaskDto!): Task!
   createTask(createTaskDto: CreateTaskInput!): Task!
+  updateProject(updateProjectDto: UpdateProjectDto!): Project!
   createProject(createProjectDto: CreateProjectDto!): Project!
 }
 
@@ -89,6 +90,17 @@ input CreateTaskInput {
   title: String!
   details: String
   outcomes: String
+  createdDate: String!
+  endDate: String!
+  isCompleted: Boolean!
+}
+
+input UpdateProjectDto {
+  id: Int!
+  removeExistingTasks: Boolean!
+  tasksId: [Int]
+  title: String!
+  details: String
   createdDate: String!
   endDate: String!
   isCompleted: Boolean!
