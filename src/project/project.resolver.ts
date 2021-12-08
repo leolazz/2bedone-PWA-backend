@@ -15,6 +15,7 @@ import {
 import { Project } from '../dal/entity/project.entity';
 import { Task } from '../dal/entity/task.entity';
 import { CreateProjectDto } from './dto/createProjectDto';
+import { DeleteProjectInput } from './dto/DeleteProject-input';
 import { UpdateProjectDto } from './dto/updateProjectDto';
 import { ProjectService } from './project.service';
 
@@ -55,8 +56,10 @@ export class ProjectResolver {
     return this.projectService.updateProject(updateProjectDto);
   }
   @Mutation((returns) => Project)
-  deleteProject(@Args('id') id: number): Promise<Project> {
-    return this.projectService.deleteProject(id);
+  deleteProject(
+    @Args('deleteProjectInput') deleteProjectInput: DeleteProjectInput,
+  ): Promise<Project> {
+    return this.projectService.deleteProject(deleteProjectInput);
   }
 
   @Mutation((returns) => Project)

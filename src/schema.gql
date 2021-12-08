@@ -62,7 +62,7 @@ type Mutation {
   deleteTask(id: Float!): Task!
   createTask(createTaskDto: CreateTaskInput!): Task!
   updateProject(updateProjectDto: UpdateProjectDto!): Project!
-  deleteProject(id: Float!): Project!
+  deleteProject(deleteProjectInput: DeleteProjectInput!): Project!
   createProject(createProjectDto: CreateProjectDto!): Project!
 }
 
@@ -106,4 +106,9 @@ input UpdateProjectDto {
   createdDate: String!
   endDate: String!
   isCompleted: Boolean!
+}
+
+input DeleteProjectInput {
+  id: Int!
+  deleteTasks: Boolean!
 }

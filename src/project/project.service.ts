@@ -11,6 +11,7 @@ import {
 import { timeStamp } from 'console';
 import { UpdateProjectDto } from './dto/updateProjectDto';
 import { TaskService } from '../task/task.service';
+import { DeleteProjectInput } from './dto/DeleteProject-input';
 
 @Injectable()
 export class ProjectService {
@@ -22,10 +23,24 @@ export class ProjectService {
     private readonly taskService: TaskService,
   ) {}
 
-  async deleteProject(id: number) {
-    const project = await this.projectRepository.findOne(id);
-    const deletedProject = await this.projectRepository.remove(project);
-    return deletedProject;
+  async deleteProject(x: DeleteProjectInput) {
+    const project = await this.projectRepository.findOne(x.id);
+    let tasks = await this.taskRepository.find({
+      where: { projectId: x.id },
+    });
+    if (x.deleteTasks) {
+      tasks = tasks.map((x) => (x.projectId = null));
+      tasks = await this.taskRepository.save(tasks);
+      const deletedTasks = this.taskRepository.remove(tasks);
+      const deletedProject = await this.projectRepository.remove(project);
+      deletedProject.tasks = deletedTasks;
+      return deletedProject;
+    } else {
+      tasks = tasks.map((x) => (x.projectId = null));
+      tasks = await this.taskRepository.save(tasks);
+      const deletedProject = await this.projectRepository.remove(project);
+      return deletedProject;
+    }
   }
 
   async findAll(isCompleted: boolean): Promise<Project[]> {
