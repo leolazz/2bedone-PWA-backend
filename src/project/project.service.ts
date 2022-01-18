@@ -29,14 +29,22 @@ export class ProjectService {
       where: { projectId: x.id },
     });
     if (x.deleteTasks) {
-      tasks = tasks.map((x) => (x.projectId = null));
+      tasks = tasks.map((x) => {
+        x = x;
+        x.projectId = null;
+        return x;
+      });
       tasks = await this.taskRepository.save(tasks);
       const deletedTasks = this.taskRepository.remove(tasks);
       const deletedProject = await this.projectRepository.remove(project);
       deletedProject.tasks = deletedTasks;
       return deletedProject;
     } else {
-      tasks = tasks.map((x) => (x.projectId = null));
+      tasks = tasks.map((x) => {
+        x = x;
+        x.projectId = null;
+        return x;
+      });
       tasks = await this.taskRepository.save(tasks);
       const deletedProject = await this.projectRepository.remove(project);
       return deletedProject;
