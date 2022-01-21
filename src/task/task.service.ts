@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import {
   generateTypeOrmOrderOptions,
   PageableOptions,
@@ -25,12 +25,25 @@ export class TaskService {
   }
 
   async getTasks(pageableOptions?: PageableOptions): Promise<[Task[], number]> {
-    return await this.taskRepository.findAndCount({
-      where: { isCompleted: pageableOptions.isCompleted },
-      take: pageableOptions?.limit,
-      skip: pageableOptions?.offset,
-      order: generateTypeOrmOrderOptions(pageableOptions?.sortOptions),
-    });
+    if (pageableOptions.search) {
+      return await this.taskRepository.findAndCount({
+        where: {
+          isCompleted: pageableOptions.isCompleted,
+          title: Like(`%${pageableOptions.search}%`),
+        },
+        take: pageableOptions?.limit,
+        skip: pageableOptions?.offset,
+        order: generateTypeOrmOrderOptions(pageableOptions?.sortOptions),
+      });
+    } else
+      return await this.taskRepository.findAndCount({
+        where: {
+          isCompleted: pageableOptions.isCompleted,
+        },
+        take: pageableOptions?.limit,
+        skip: pageableOptions?.offset,
+        order: generateTypeOrmOrderOptions(pageableOptions?.sortOptions),
+      });
   }
 
   async createTask(createTaskDto: CreateTaskDto): Promise<Task> {

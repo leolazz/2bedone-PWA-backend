@@ -36,6 +36,9 @@ export class SortOptions {
 
 @InputType()
 export class PageableOptions {
+  @Field(() => String, { nullable: true })
+  public search?: string;
+
   @Field(() => Int, { nullable: true })
   public limit?: number;
 

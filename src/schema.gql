@@ -46,6 +46,7 @@ type Query {
 }
 
 input PageableOptions {
+  search: String
   limit: Int
   offset: Int
   isCompleted: Boolean
