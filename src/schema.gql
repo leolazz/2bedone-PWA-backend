@@ -100,7 +100,7 @@ input CreateTaskInput {
 
 input UpdateProjectDto {
   id: Int!
-  removeExistingTasks: Boolean!
+  tasksToRemoveId: [Int]
   tasksId: [Int]
   title: String!
   details: String

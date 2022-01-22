@@ -5,8 +5,8 @@ export class UpdateProjectDto {
   @Field((type) => Int)
   public id?: number;
 
-  @Field()
-  removeExistingTasks: boolean;
+  @Field((type) => [Int], { nullable: 'itemsAndList' })
+  public tasksToRemoveId?: number[];
 
   @Field((type) => [Int], { nullable: 'itemsAndList' })
   public tasksId?: number[];

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository, UpdateResult } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { Project } from '../dal/entity/project.entity';
 import { Task } from '../dal/entity/task.entity';
 import { CreateProjectDto } from './dto/createProjectDto';
@@ -8,7 +8,6 @@ import {
   generateTypeOrmOrderOptions,
   PageableOptions,
 } from '../dal/entity/pagination/paginatedResponse.helper';
-import { timeStamp } from 'console';
 import { UpdateProjectDto } from './dto/updateProjectDto';
 import { TaskService } from '../task/task.service';
 import { DeleteProjectInput } from './dto/DeleteProject-input';
@@ -80,8 +79,9 @@ export class ProjectService {
   }
   async updateProject(project: UpdateProjectDto): Promise<Project> {
     const updatedProject = await this.projectRepository.save(project);
-    if (project.removeExistingTasks)
+    if (project.tasksToRemoveId.length) {
       await this.taskService.removeProject(project.id);
+    }
 
     let tasks = await this.taskRepository.find({
       where: { id: In(project.tasksId) },
