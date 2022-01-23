@@ -79,7 +79,7 @@ export class ProjectService {
   }
   async updateProject(project: UpdateProjectDto): Promise<Project> {
     const updatedProject = await this.projectRepository.save(project);
-    if (project.tasksToRemoveId.length) {
+    if (project.tasksToRemoveId != null) {
       await this.taskService.removeProject(project.id);
     }
 
