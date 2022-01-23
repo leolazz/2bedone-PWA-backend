@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { In, Like, Repository } from 'typeorm';
 import { Project } from '../dal/entity/project.entity';
 import { Task } from '../dal/entity/task.entity';
 import { CreateProjectDto } from './dto/createProjectDto';
@@ -70,12 +70,26 @@ export class ProjectService {
   async getProjects(
     pageableOptions?: PageableOptions,
   ): Promise<[Project[], number]> {
-    return await this.projectRepository.findAndCount({
-      where: { isCompleted: pageableOptions.isCompleted },
-      take: pageableOptions?.limit,
-      skip: pageableOptions?.offset,
-      order: generateTypeOrmOrderOptions(pageableOptions?.sortOptions),
-    });
+    if (pageableOptions.search) {
+      return await this.projectRepository.findAndCount({
+        where: {
+          isCompleted: pageableOptions.isCompleted,
+          title: Like(`%${pageableOptions.search}%`),
+        },
+        take: pageableOptions?.limit,
+        skip: pageableOptions?.offset,
+        order: generateTypeOrmOrderOptions(pageableOptions?.sortOptions),
+      });
+    } else {
+      return await this.projectRepository.findAndCount({
+        where: {
+          isCompleted: pageableOptions.isCompleted,
+        },
+        take: pageableOptions?.limit,
+        skip: pageableOptions?.offset,
+        order: generateTypeOrmOrderOptions(pageableOptions?.sortOptions),
+      });
+    }
   }
   async updateProject(project: UpdateProjectDto): Promise<Project> {
     const updatedProject = await this.projectRepository.save(project);
