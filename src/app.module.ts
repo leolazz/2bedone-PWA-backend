@@ -6,11 +6,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
 import { TaskModule } from './task/task.module';
 import { ProjectModule } from './project/project.module';
+import { CalendarModule } from './calendar/calendar.module';
 
 @Module({
   imports: [
     TaskModule,
     ProjectModule,
+    CalendarModule,
     TypeOrmModule.forRoot({
       type: 'sqlite',
       database: 'data/sqlite3.db',
