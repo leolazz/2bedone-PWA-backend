@@ -1,6 +1,5 @@
 import {
   Args,
-  ID,
   Int,
   Mutation,
   Parent,
