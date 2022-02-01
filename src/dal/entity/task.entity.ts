@@ -20,7 +20,7 @@ export class Task {
   @Column({ nullable: true })
   public projectId?: number;
 
-  @Field({ nullable: true })
+  @Field({ nullable: false })
   @Column()
   public title: string;
 
@@ -32,15 +32,15 @@ export class Task {
   @Column({ nullable: true })
   public outcomes?: string;
 
-  @Field({ nullable: true })
+  @Field({ nullable: false })
   @Column()
   public createdDate: string;
 
-  @Field({ nullable: true })
+  @Field({ nullable: false })
   @Column()
   public endDate: string;
 
-  @Field({ nullable: true })
+  @Field({ nullable: false })
   @Column()
   public isCompleted: boolean;
 }
