@@ -34,9 +34,35 @@ type PaginatedProjectsResponse {
   total: Int!
 }
 
+type ProjectEvent {
+  id: Int!
+  taskIds: [Int!]
+  title: String!
+  details: String
+  startTime: DateTime!
+  endTime: DateTime!
+  isCompleted: Boolean!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type TaskEvent {
+  id: Int!
+  projectId: Int
+  title: String!
+  details: String
+  outcomes: String
+  startTime: DateTime!
+  endTime: DateTime!
+  isCompleted: Boolean!
+}
+
 type Calendar {
-  tasks: [Task]
-  projects: [Project]
+  tasks: [TaskEvent]
+  projects: [ProjectEvent]
 }
 
 type Query {

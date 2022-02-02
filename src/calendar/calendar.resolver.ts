@@ -1,3 +1,4 @@
+import { ConsoleLogger } from '@nestjs/common';
 import { Args, Resolver, Query } from '@nestjs/graphql';
 import { Calendar } from '../dal/entity/calendar.entity';
 
@@ -9,7 +10,7 @@ export class CalendarResolver {
 
   @Query(() => Calendar)
   async getMonth(@Args('yearMonth') yearMonth: string): Promise<Calendar> {
-    let cal: Promise<Calendar> = this.calendarService.getCalendar(yearMonth);
+    let cal: Promise<Calendar> = this.calendarService.getEvents(yearMonth);
     return cal;
   }
 }
