@@ -93,8 +93,16 @@ export class ProjectService {
   }
   async updateProject(project: UpdateProjectDto): Promise<Project> {
     const updatedProject = await this.projectRepository.save(project);
-    if (project.tasksToRemoveId != null) {
-      await this.taskService.removeProject(project.id);
+    if (project.tasksToRemoveId.length) {
+      let tasksToRemove = await this.taskRepository.find({
+        where: { id: In(project.tasksToRemoveId) },
+      });
+      tasksToRemove = tasksToRemove.map((x) => {
+        x = x;
+        x.projectId = null;
+        return x;
+      });
+      tasksToRemove = await this.taskRepository.save(tasksToRemove);
     }
 
     let tasks = await this.taskRepository.find({
