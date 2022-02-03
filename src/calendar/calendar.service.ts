@@ -6,6 +6,7 @@ import { Project } from '../dal/entity/project.entity';
 import { ProjectEvent } from '../dal/entity/projectEvent.entity';
 import { Task } from '../dal/entity/task.entity';
 import { TaskEvent } from '../dal/entity/taskEvent.entity';
+import { CalendarOptions } from './calendarOptions.input';
 
 @Injectable()
 export class CalendarService {
@@ -16,12 +17,20 @@ export class CalendarService {
     private readonly projectRepository: Repository<Project>,
   ) {}
 
-  async getEvents(yearMonth: string): Promise<Calendar> {
+  async getEvents(calendarOptions: CalendarOptions): Promise<Calendar> {
     return {
       projects: await this.transformProjectToEvent(
-        await this.getProjects(yearMonth),
+        await this.getProjects(
+          calendarOptions.yearMonth,
+          calendarOptions.yearMonthOverlap,
+        ),
       ),
-      tasks: this.transformTaskToEvent(await this.getTasks(yearMonth)),
+      tasks: this.transformTaskToEvent(
+        await this.getTasks(
+          calendarOptions.yearMonth,
+          calendarOptions.yearMonthOverlap,
+        ),
+      ),
     };
   }
 
@@ -48,53 +57,42 @@ export class CalendarService {
     return projectEvents;
   }
 
-  // async transformToEvents(yearMonth: string): Promise<Calendar> {
-  //   const month = {
-  //     tasks: await this.getTasks(yearMonth),
-  //     projects: await this.getProjects(yearMonth),
-  //   };
-  //   const taskEvents: TaskEvent[] = [];
-  //   const projectEvents: ProjectEvent[] = [];
-  //   month.tasks.forEach((x) => {
-  //     let startTime = new Date(x.endDate);
-  //     startTime.setHours(startTime.getHours() - 1);
-  //     taskEvents.push({ ...x, startTime, endDate: new Date(x.endDate) });
-  //   });
-  //   month.projects.forEach(async (x) => {
-  //     let startTime = new Date(x.endDate);
-  //     startTime.setHours(startTime.getHours() - 1);
-  //     const tasks = await this.taskRepository.find({
-  //       where: { projectId: x.id },
-  //     });
-  //     const taskIds = tasks.map((x) => x.id);
-  //     projectEvents.push({
-  //       ...x,
-  //       startTime,
-  //       endDate: new Date(x.endDate),
-  //       taskIds,
-  //     });
-  //   });
-
-  //   return {
-  //     tasks: taskEvents,
-  //     projects: projectEvents,
-  //   };
-  // }
-
-  async getTasks(yearMonth: string) {
-    return await this.taskRepository.find({
-      where: {
-        isCompleted: false,
-        endDate: Like(`${yearMonth}%`) || Like(`${yearMonth}%`),
-      },
-    });
-  }
-  async getProjects(yearMonth: string) {
-    return await this.projectRepository.find({
+  async getTasks(yearMonth: string, yearMonthOverlap?: string) {
+    let taskEvents = await this.taskRepository.find({
       where: {
         isCompleted: false,
         endDate: Like(`${yearMonth}%`),
       },
     });
+    if (yearMonthOverlap) {
+      const overlapTaskEvents = await this.taskRepository.find({
+        where: {
+          isCompleted: false,
+          endDate: Like(`${yearMonthOverlap}%`),
+        },
+      });
+      taskEvents = [...taskEvents, ...overlapTaskEvents];
+    }
+
+    return taskEvents;
+  }
+  async getProjects(yearMonth: string, yearMonthOverlap?: string) {
+    let projectEvents = await this.projectRepository.find({
+      where: {
+        isCompleted: false,
+        endDate: Like(`${yearMonth}%`),
+      },
+    });
+    if (yearMonthOverlap) {
+      const overlapprojectEvents = await this.projectRepository.find({
+        where: {
+          isCompleted: false,
+          endDate: Like(`${yearMonthOverlap}%`),
+        },
+      });
+      projectEvents = [...projectEvents, ...overlapprojectEvents];
+    }
+
+    return projectEvents;
   }
 }

@@ -74,7 +74,7 @@ type Query {
   allProjects(isCompleted: Boolean!): [Project!]!
   findOneProjectById(id: Int!): Project!
   paginatedProjects(pageableOptions: PageableOptions): PaginatedProjectsResponse!
-  getMonth(yearMonth: String!): Calendar!
+  getMonth(calendarOptions: CalendarOptions!): Calendar!
 }
 
 input PageableOptions {
@@ -88,6 +88,11 @@ input PageableOptions {
 input SortOptions {
   field: String!
   ascending: Boolean!
+}
+
+input CalendarOptions {
+  yearMonth: String!
+  yearMonthOverlap: String
 }
 
 type Mutation {
