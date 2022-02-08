@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  web:
+    image: leolazz/2bdone-pwa-backend:1.1
+    # build: .
+    ports:
+      - '3000:3000'
+    volumes:
+      - type: bind
+        source: ./data
+        target: /usr/src/app/data
