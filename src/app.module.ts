@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
+import * as path from 'path';
 import { TaskModule } from './task/task.module';
 import { ProjectModule } from './project/project.module';
 import { CalendarModule } from './calendar/calendar.module';
@@ -15,7 +16,7 @@ import { CalendarModule } from './calendar/calendar.module';
     CalendarModule,
     TypeOrmModule.forRoot({
       type: 'sqlite',
-      database: 'data/sqlite3.db',
+      database: path.join('data', 'sqlite3.db'),
       entities: [__dirname + '/dal/entity/**/*.*.*'],
       synchronize: true,
     }),
