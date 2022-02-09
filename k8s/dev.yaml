@@ -1,0 +1,113 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tobedone-pwa-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: tobedone-pwa
+  template:
+    metadata:
+      labels:
+        component: tobedone-pwa
+    spec:
+      containers:
+        - name: tobedone-pwa-client
+          image: leolazz/2bedone-pwa-client:1.4
+          resources:
+            limits:
+              memory: '100Mi'
+              cpu: '100m'
+          ports:
+            - containerPort: 80
+        - name: tobedone-pwa-server
+          image: leolazz/2bedone-pwa-backend:1.1
+          ports:
+            - containerPort: 3000
+          resources:
+            requests:
+              memory: '200Mi'
+              cpu: '200m'
+            limits:
+              memory: '200Mi'
+              cpu: '200m'
+          volumeMounts:
+            - mountPath: /usr/src/app/data
+              name: tobedone-pwa-data
+          imagePullPolicy: Always
+      volumes:
+        - name: tobedone-pwa-data
+          persistentVolumeClaim:
+            claimName: tobedone-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: tobedone-pwa-pvc
+  namespace: default
+  labels:
+    app: tobedone-pwa-server
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tobedone-pwa-server-service
+spec:
+  type: ClusterIP
+  selector:
+    component: tobedone-pwa
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tobedone-pwa-client-service
+spec:
+  type: ClusterIP
+  selector:
+    component: tobedone-pwa
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tobedone-pwa-client-ingress
+  labels:
+    component: tobedone-pwa-client
+  annotations:
+    kubernetes.io/ingress.class: 'traefik'
+spec:
+  rules:
+    - host: 2bedone-pwa.internal.lazz.tech
+      http:
+        paths:
+          - path: /graphql
+            pathType: Prefix
+            backend:
+              service:
+                name: tobedone-pwa-server-service
+                port:
+                  number: 3000
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: tobedone-pwa-client-service
+                port:
+                  number: 80
+
+---
+
