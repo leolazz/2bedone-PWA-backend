@@ -90,8 +90,12 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: 'traefik'
 spec:
+  tls:
+    - secretName: lazztech-acme-crt-secret
+      hosts:
+        - '*.lazz.tech'
   rules:
-    - host: 2bedone-pwa.internal.lazz.tech
+    - host: 2bedone-pwa.lazz.tech
       http:
         paths:
           - path: /graphql
