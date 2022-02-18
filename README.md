@@ -6,17 +6,27 @@
 
 2BeDone-PWA is a rebuild of my first project, but now as progressive web app using a new stack.
 
-# Why I made this:
+### Why I made this:
 
-To rapidly learn Angular, Ionic, graphql, and Apollo. Furthermore, learn the difference of building a website/app that should be equally consumable in a desktop or mobile experience.
+While getting on boarded to work a project called the LazzTech hub app I realized that since it was already to so far into development there would be aspects of this new stack I would not get exposure to. I decided to rebuild 2BeDone in this new stack to accelerate the onboarding increase my breadth of knowledge and experience in this new stack.
 
-# Constraints & Challenges:
+- Accelerate on boarding to lazztech hub
+- Expand my understanding of a new stack
+- Learn about designing for a dedicated cross platform experience
 
-Learning a new stack while trying to complete the project quickly and make it feel different than the orignal version.
+### Constraints & Challenges:
 
-# Results:
+- Aiming to quickly to complete the project while:
+  - Working on the Lazztech Hub
+  - Trying to differentiate it from the original version
+- Learning the nuances and complexity of:
+  - Configuration and utilization of GraphQL
+  - integrating apollo and its state management
+- Monolithic size of Angular at first exposure
 
-Gained a solid and practical understanding of Angular, Ionic, GraphQl, and Apollo.
+### Results:
+
+Increased overall skill and knowledge base in a new tech stack while accelerating the onboarding process to the LazzTech Hub, and in the process found my preferred stack.
 
 ## Mobile
 
