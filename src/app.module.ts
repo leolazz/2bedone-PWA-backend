@@ -8,6 +8,7 @@ import * as path from 'path';
 import { TaskModule } from './task/task.module';
 import { ProjectModule } from './project/project.module';
 import { CalendarModule } from './calendar/calendar.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { CalendarModule } from './calendar/calendar.module';
         origin: true,
       },
     }),
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
