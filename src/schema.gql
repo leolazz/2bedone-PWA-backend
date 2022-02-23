@@ -4,6 +4,7 @@
 
 type Task {
   id: Int!
+  user: Int!
   project: Project
   projectId: Int
   title: String!
@@ -16,6 +17,7 @@ type Task {
 
 type Project {
   id: Int!
+  user: Int!
   title: String!
   details: String
   createdDate: String!
