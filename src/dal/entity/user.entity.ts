@@ -1,5 +1,5 @@
 import { Field, ID, InputType, Int, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Project } from './project.entity';
 import { Task } from './task.entity';
 
@@ -19,8 +19,14 @@ export class User {
   public password: string;
 
   @Field((type) => Task, { nullable: true })
+  @OneToMany(() => Task, (task) => task.user, {
+    nullable: false,
+  })
   public tasks?: Promise<Task[]>;
 
   @Field((type) => Project, { nullable: true })
+  @OneToMany(() => Project, (project) => project.user, {
+    nullable: false,
+  })
   public projects?: Promise<Project[]>;
 }
