@@ -10,9 +10,13 @@ import { ProjectModule } from './project/project.module';
 import { CalendarModule } from './calendar/calendar.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      envFilePath: ['.env.local'],
+    }),
     TaskModule,
     ProjectModule,
     CalendarModule,

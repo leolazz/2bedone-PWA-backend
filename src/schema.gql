@@ -104,6 +104,9 @@ type Mutation {
   updateProject(updateProjectDto: UpdateProjectDto!): Project!
   deleteProject(deleteProjectInput: DeleteProjectInput!): Project!
   createProject(createProjectDto: CreateProjectDto!): Project!
+  login(password: String!, email: String!): String
+  register(data: UserInput!): String
+  logout: Boolean!
 }
 
 input CreateTaskDto {
@@ -151,4 +154,9 @@ input UpdateProjectDto {
 input DeleteProjectInput {
   id: Int!
   deleteTasks: Boolean!
+}
+
+input UserInput {
+  email: String!
+  password: String!
 }
