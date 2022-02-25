@@ -2,6 +2,13 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type User {
+  id: Int!
+  email: String!
+  tasks: Task
+  projects: Project
+}
+
 type Task {
   id: Int!
   user: Int!
@@ -77,6 +84,7 @@ type Query {
   findOneProjectById(id: Int!): Project!
   paginatedProjects(pageableOptions: PageableOptions): PaginatedProjectsResponse!
   getMonth(calendarOptions: CalendarOptions!): Calendar!
+  me: User
 }
 
 input PageableOptions {
