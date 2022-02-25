@@ -1,3 +1,4 @@
+import { UseGuards } from '@nestjs/common';
 import {
   Args,
   Int,
@@ -7,6 +8,7 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
+import { GqlJwtAuthGuard } from '../auth/gql-jwt-auth.guard';
 import {
   PageableOptions,
   PaginatedProjectsResponse,
@@ -18,6 +20,7 @@ import { DeleteProjectInput } from './dto/DeleteProject-input';
 import { UpdateProjectDto } from './dto/updateProjectDto';
 import { ProjectService } from './project.service';
 
+@UseGuards(GqlJwtAuthGuard)
 @Resolver((of) => Project)
 export class ProjectResolver {
   constructor(private projectService: ProjectService) {}

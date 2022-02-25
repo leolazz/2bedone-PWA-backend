@@ -1,3 +1,4 @@
+import { UseGuards } from '@nestjs/common';
 import {
   Args,
   Int,
@@ -7,6 +8,7 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
+import { GqlJwtAuthGuard } from '../auth/gql-jwt-auth.guard';
 import {
   PageableOptions,
   PaginatedTasksResponse,
@@ -18,6 +20,7 @@ import { CreateTaskDto } from './dto/createTaskDto';
 
 import { TaskService } from './task.service';
 
+@UseGuards(GqlJwtAuthGuard)
 @Resolver((of) => Task)
 export class TaskResolver {
   constructor(private taskService: TaskService) {}
