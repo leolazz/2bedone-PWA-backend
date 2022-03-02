@@ -120,11 +120,20 @@ export class ProjectService {
       tasksToRemove = await this.taskRepository.save(tasksToRemove);
     }
 
-    let tasks = await this.taskRepository.find({
+    let newTasks, priorTasks;
+    newTasks = await this.taskRepository.find({
       where: { id: In(project.tasksId) },
     });
-    tasks.forEach((task) => (task.projectId = updatedProject.id));
-    let updatedTasks: any = await this.taskRepository.save(tasks);
+    priorTasks = await this.taskRepository.find({
+      where: { projectId: project.id },
+    });
+    let updatedTasks: any = [...priorTasks, ...newTasks];
+    newTasks.forEach((task) => (task.projectId = updatedProject.id));
+
+    if (updatedProject.isCompleted) {
+      updatedTasks.forEach((task) => (task.isCompleted = true));
+    }
+    updatedTasks = await this.taskRepository.save(updatedTasks);
     updatedProject.tasks = updatedTasks;
     return updatedProject;
   }
