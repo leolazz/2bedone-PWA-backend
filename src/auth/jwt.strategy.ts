@@ -21,16 +21,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: Payload) {
-    this.logger.log('verified access token.');
-
     const user = await this.usersService.getUser(payload.userId);
     if (!user) {
-      this.logger.error('unable to verify access token.');
       throw new UnauthorizedException();
-    } else {
-      this.logger.log('verified user');
     }
-
     return payload;
   }
 }
