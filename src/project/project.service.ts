@@ -22,8 +22,10 @@ export class ProjectService {
     private readonly taskService: TaskService,
   ) {}
 
-  async deleteProject(x: DeleteProjectInput) {
-    const project = await this.projectRepository.findOne(x.id);
+  async deleteProject(userId: number, x: DeleteProjectInput) {
+    const project = await this.projectRepository.findOne({
+      where: { id: x.id, user: userId },
+    });
     let tasks = await this.taskRepository.find({
       where: { projectId: x.id },
     });
@@ -50,29 +52,35 @@ export class ProjectService {
     }
   }
 
-  async findAll(isCompleted: boolean): Promise<Project[]> {
+  async findAll(userId: number, isCompleted: boolean): Promise<Project[]> {
     return await this.projectRepository.find({
-      where: { isCompleted: isCompleted },
+      where: { isCompleted: isCompleted, user: userId },
     });
   }
   async findAllWithLimit(limit: number): Promise<Project[]> {
     return await this.projectRepository.find({ take: limit });
   }
 
-  async findOneById(projectId: number): Promise<Project> {
-    return await this.projectRepository.findOne(projectId);
+  async findOneById(userId: number, projectId: number): Promise<Project> {
+    return await this.projectRepository.findOne({
+      where: { id: projectId, user: userId },
+    });
   }
 
-  async getTasks(projectId: number): Promise<Task[]> {
-    return this.taskRepository.find({ where: { projectId: projectId } });
+  async getTasks(userId: number, projectId: number): Promise<Task[]> {
+    return this.taskRepository.find({
+      where: { projectId: projectId, user: userId },
+    });
   }
 
   async getProjects(
+    userId: number,
     pageableOptions?: PageableOptions,
   ): Promise<[Project[], number]> {
     if (pageableOptions.search) {
       return await this.projectRepository.findAndCount({
         where: {
+          user: userId,
           isCompleted: pageableOptions.isCompleted,
           title: Like(`%${pageableOptions.search}%`),
         },
@@ -83,6 +91,7 @@ export class ProjectService {
     } else {
       return await this.projectRepository.findAndCount({
         where: {
+          user: userId,
           isCompleted: pageableOptions.isCompleted,
         },
         take: pageableOptions?.limit,
@@ -91,8 +100,14 @@ export class ProjectService {
       });
     }
   }
-  async updateProject(project: UpdateProjectDto): Promise<Project> {
-    const updatedProject = await this.projectRepository.save(project);
+  async updateProject(
+    userId: number,
+    project: UpdateProjectDto,
+  ): Promise<Project> {
+    const updatedProject = await this.projectRepository.save({
+      ...project,
+      user: userId,
+    });
     if (project.tasksToRemoveId.length) {
       let tasksToRemove = await this.taskRepository.find({
         where: { id: In(project.tasksToRemoveId) },
@@ -114,8 +129,14 @@ export class ProjectService {
     return updatedProject;
   }
 
-  async createProject(createProjectDto: CreateProjectDto): Promise<Project> {
-    let newProject = await this.projectRepository.save(createProjectDto);
+  async createProject(
+    userId: number,
+    createProjectDto: CreateProjectDto,
+  ): Promise<Project> {
+    let newProject = await this.projectRepository.save({
+      ...createProjectDto,
+      user: userId,
+    });
     let tasks = await this.taskRepository.find({
       where: { id: In(createProjectDto.tasksId) },
     });
