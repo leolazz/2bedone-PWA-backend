@@ -32,6 +32,7 @@ export class TaskResolver {
 
   @Query(() => [Task])
   async allTasksLimit(
+    @UserId() userId,
     @Args({ name: 'limit', type: () => Int }) limit: number,
   ): Promise<Task[]> {
     return this.taskService.findAllWithLimit(limit);
@@ -53,40 +54,43 @@ export class TaskResolver {
   }
 
   @Query(() => [Task])
-  async allOrphanTasks(): Promise<Task[]> {
-    return this.taskService.findAllOprhanedTasks();
+  async allOrphanTasks(@UserId() userId): Promise<Task[]> {
+    return this.taskService.findAllOprhanedTasks(userId);
   }
   @Query(() => Task)
   async findOneTaskById(
+    @UserId() userId,
     @Args({ name: 'id', type: () => Int }) id: number,
   ): Promise<Task> {
-    return this.taskService.findOneById(id);
+    return this.taskService.findOneById(userId, id);
   }
 
   // This seems weird. without the if statement a project is always returned even if there is no supplied projectId
   @ResolveField((returns) => Project)
-  project(@Parent() task: Task): Promise<Project> {
+  project(@UserId() userId, @Parent() task: Task): Promise<Project> {
     if (task.projectId) {
-      return this.taskService.getProject(task.projectId);
+      return this.taskService.getProject(userId, task.projectId);
     } else return null;
   }
 
   @Mutation((returns) => Task)
   updateTask(
+    @UserId() userId,
     @Args('createTaskDto') createTaskDto: CreateTaskDto,
   ): Promise<Task> {
-    return this.taskService.updateTask(createTaskDto);
+    return this.taskService.updateTask(userId, createTaskDto);
   }
 
   @Mutation((returns) => Task)
-  deleteTask(@Args('id') id: number): Promise<Task> {
-    return this.taskService.deleteTask(id);
+  deleteTask(@UserId() userId, @Args('id') id: number): Promise<Task> {
+    return this.taskService.deleteTask(userId, id);
   }
 
   @Mutation((returns) => Task)
   createTask(
+    @UserId() userId,
     @Args('createTaskDto') createTaskDto: CreateTaskInput,
   ): Promise<Task> {
-    return this.taskService.createTask(createTaskDto);
+    return this.taskService.createTask(userId, createTaskDto);
   }
 }
