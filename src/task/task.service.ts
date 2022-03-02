@@ -70,7 +70,7 @@ export class TaskService {
 
   async getProject(userId: number, projectId: number): Promise<Project> {
     return await this.projectRepository.findOne({
-      where: { projectId, user: userId },
+      where: { id: projectId, user: userId },
     });
   }
   async updateTask(userId: number, task: CreateTaskDto) {
