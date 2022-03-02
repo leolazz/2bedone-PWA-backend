@@ -15,9 +15,9 @@ import {
 } from '../dal/entity/pagination/paginatedResponse.helper';
 import { Project } from '../dal/entity/project.entity';
 import { Task } from '../dal/entity/task.entity';
+import { UserId } from '../users/user.decorator';
 import { CreateTaskInput } from './dto/createTask-input';
 import { CreateTaskDto } from './dto/createTaskDto';
-
 import { TaskService } from './task.service';
 
 @UseGuards(GqlJwtAuthGuard)
@@ -38,10 +38,14 @@ export class TaskResolver {
   }
   @Query(() => PaginatedTasksResponse)
   async paginatedTasks(
+    @UserId() userId,
     @Args('pageableOptions', { nullable: true })
     PageableOptions?: PageableOptions,
   ): Promise<PaginatedTasksResponse> {
-    const [items, total] = await this.taskService.getTasks(PageableOptions);
+    const [items, total] = await this.taskService.getTasks(
+      userId,
+      PageableOptions,
+    );
     return {
       items,
       total,

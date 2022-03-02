@@ -24,10 +24,14 @@ export class TaskService {
     return deletedTask;
   }
 
-  async getTasks(pageableOptions?: PageableOptions): Promise<[Task[], number]> {
+  async getTasks(
+    userId: any,
+    pageableOptions?: PageableOptions,
+  ): Promise<[Task[], number]> {
     if (pageableOptions.search) {
       return await this.taskRepository.findAndCount({
         where: {
+          user: userId,
           isCompleted: pageableOptions.isCompleted,
           title: Like(`%${pageableOptions.search}%`),
         },
@@ -38,6 +42,7 @@ export class TaskService {
     } else
       return await this.taskRepository.findAndCount({
         where: {
+          user: userId,
           isCompleted: pageableOptions.isCompleted,
         },
         take: pageableOptions?.limit,
