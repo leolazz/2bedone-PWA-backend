@@ -17,16 +17,21 @@ export class CalendarService {
     private readonly projectRepository: Repository<Project>,
   ) {}
 
-  async getEvents(calendarOptions: CalendarOptions): Promise<Calendar> {
+  async getEvents(
+    userId: number,
+    calendarOptions: CalendarOptions,
+  ): Promise<Calendar> {
     return {
       projects: await this.transformProjectToEvent(
         await this.getProjects(
+          userId,
           calendarOptions.yearMonth,
           calendarOptions.yearMonthOverlap,
         ),
       ),
       tasks: this.transformTaskToEvent(
         await this.getTasks(
+          userId,
           calendarOptions.yearMonth,
           calendarOptions.yearMonthOverlap,
         ),
@@ -57,9 +62,10 @@ export class CalendarService {
     return projectEvents;
   }
 
-  async getTasks(yearMonth: string, yearMonthOverlap?: string) {
+  async getTasks(userId: number, yearMonth: string, yearMonthOverlap?: string) {
     let taskEvents = await this.taskRepository.find({
       where: {
+        user: userId,
         isCompleted: false,
         endDate: Like(`${yearMonth}%`),
       },
@@ -67,6 +73,7 @@ export class CalendarService {
     if (yearMonthOverlap) {
       const overlapTaskEvents = await this.taskRepository.find({
         where: {
+          user: userId,
           isCompleted: false,
           endDate: Like(`${yearMonthOverlap}%`),
         },
@@ -76,9 +83,14 @@ export class CalendarService {
 
     return taskEvents;
   }
-  async getProjects(yearMonth: string, yearMonthOverlap?: string) {
+  async getProjects(
+    userId: number,
+    yearMonth: string,
+    yearMonthOverlap?: string,
+  ) {
     let projectEvents = await this.projectRepository.find({
       where: {
+        user: userId,
         isCompleted: false,
         endDate: Like(`${yearMonth}%`),
       },
@@ -86,6 +98,7 @@ export class CalendarService {
     if (yearMonthOverlap) {
       const overlapprojectEvents = await this.projectRepository.find({
         where: {
+          user: userId,
           isCompleted: false,
           endDate: Like(`${yearMonthOverlap}%`),
         },
