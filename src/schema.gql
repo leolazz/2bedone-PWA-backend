@@ -2,8 +2,16 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type User {
+  id: Int!
+  email: String!
+  tasks: Task
+  projects: Project
+}
+
 type Task {
   id: Int!
+  user: Int!
   project: Project
   projectId: Int
   title: String!
@@ -16,6 +24,7 @@ type Task {
 
 type Project {
   id: Int!
+  user: Int!
   title: String!
   details: String
   createdDate: String!
@@ -75,6 +84,7 @@ type Query {
   findOneProjectById(id: Int!): Project!
   paginatedProjects(pageableOptions: PageableOptions): PaginatedProjectsResponse!
   getMonth(calendarOptions: CalendarOptions!): Calendar!
+  me: User
 }
 
 input PageableOptions {
@@ -102,6 +112,9 @@ type Mutation {
   updateProject(updateProjectDto: UpdateProjectDto!): Project!
   deleteProject(deleteProjectInput: DeleteProjectInput!): Project!
   createProject(createProjectDto: CreateProjectDto!): Project!
+  login(password: String!, email: String!): String
+  register(data: UserInput!): String
+  logout: Boolean!
 }
 
 input CreateTaskDto {
@@ -149,4 +162,9 @@ input UpdateProjectDto {
 input DeleteProjectInput {
   id: Int!
   deleteTasks: Boolean!
+}
+
+input UserInput {
+  email: String!
+  password: String!
 }

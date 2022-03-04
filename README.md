@@ -43,6 +43,13 @@ Increased overall skill and knowledge base in a new tech stack while acceleratin
 $ npm install
 ```
 
+## Auth
+
+```
+# Add a .env.local file with:
+ACCESS_TOKEN_SECRET=YOU_SECRET_KEY
+```
+
 ## Running the app
 
 ```bash

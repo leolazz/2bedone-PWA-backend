@@ -18,16 +18,22 @@ export class TaskService {
     private readonly projectRepository: Repository<Project>,
   ) {}
 
-  async deleteTask(id: number) {
-    const task = await this.taskRepository.findOne(id);
+  async deleteTask(userId, id: number) {
+    const task = await this.taskRepository.findOne({
+      where: { id, user: userId },
+    });
     const deletedTask = await this.taskRepository.remove(task);
     return deletedTask;
   }
 
-  async getTasks(pageableOptions?: PageableOptions): Promise<[Task[], number]> {
+  async getTasks(
+    userId: any,
+    pageableOptions?: PageableOptions,
+  ): Promise<[Task[], number]> {
     if (pageableOptions.search) {
       return await this.taskRepository.findAndCount({
         where: {
+          user: userId,
           isCompleted: pageableOptions.isCompleted,
           title: Like(`%${pageableOptions.search}%`),
         },
@@ -38,6 +44,7 @@ export class TaskService {
     } else
       return await this.taskRepository.findAndCount({
         where: {
+          user: userId,
           isCompleted: pageableOptions.isCompleted,
         },
         take: pageableOptions?.limit,
@@ -46,26 +53,34 @@ export class TaskService {
       });
   }
 
-  async createTask(createTaskDto: CreateTaskDto): Promise<Task> {
+  async createTask(
+    userId: number,
+    createTaskDto: CreateTaskDto,
+  ): Promise<Task> {
     const newTask = this.taskRepository.save({
       ...createTaskDto,
       project: null,
+      user: userId,
     });
     return newTask;
   }
-  async findOneById(id: number) {
-    return await this.taskRepository.findOne(id);
+  async findOneById(userId: number, id: number) {
+    return await this.taskRepository.findOne({ where: { id, user: userId } });
   }
 
-  async getProject(projectId: number): Promise<Project> {
-    return await this.projectRepository.findOne(projectId);
+  async getProject(userId: number, projectId: number): Promise<Project> {
+    return await this.projectRepository.findOne({
+      where: { id: projectId, user: userId },
+    });
   }
-  async updateTask(task: CreateTaskDto) {
-    return this.taskRepository.save({ ...task, project: null });
+  async updateTask(userId: number, task: CreateTaskDto) {
+    return this.taskRepository.save({ ...task, project: null, user: userId });
   }
 
-  async removeProject(projectId: number) {
-    const tasks = await this.taskRepository.find({ where: { projectId } });
+  async removeProject(userId: number, projectId: number) {
+    const tasks = await this.taskRepository.find({
+      where: { projectId, user: userId },
+    });
     tasks.forEach((x) => (x.projectId = null));
     await this.taskRepository.save(tasks);
   }
@@ -74,7 +89,7 @@ export class TaskService {
     return await this.taskRepository.find({ take: limit });
   }
 
-  async findAllOprhanedTasks() {
+  async findAllOprhanedTasks(userId: number) {
     return this.taskRepository.find({
       where: { project: null, projectId: null, isCompleted: false },
     });

@@ -8,9 +8,15 @@ import * as path from 'path';
 import { TaskModule } from './task/task.module';
 import { ProjectModule } from './project/project.module';
 import { CalendarModule } from './calendar/calendar.module';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      envFilePath: ['.env.local'],
+    }),
     TaskModule,
     ProjectModule,
     CalendarModule,
@@ -22,11 +28,14 @@ import { CalendarModule } from './calendar/calendar.module';
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      context: ({ req }) => ({ req }),
       cors: {
         credentials: true,
         origin: true,
       },
     }),
+    AuthModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
