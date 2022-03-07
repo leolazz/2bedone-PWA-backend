@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   web:
-    image: leolazz/2bdone-pwa-backend:1.1
+    image: leolazz/2bdone-pwa-backend:1.3
     # build: .
     ports:
       - '3000:3000'
