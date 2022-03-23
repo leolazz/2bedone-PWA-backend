@@ -47,7 +47,12 @@ $ npm install
 
 ```
 # Add a .env.local file with:
-ACCESS_TOKEN_SECRET=YOU_SECRET_KEY
+ACCESS_TOKEN_SECRET=YOUR_SECRET_KEY
+
+# Add the access token secret to the kubenetes yaml
+env:
+  - name: ACCESS_TOKEN_SECRET
+    value: YOUR_SECRET_KEY
 ```
 
 ## Running the app
